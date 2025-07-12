@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard - ReWear</title>
+    <link rel="stylesheet" href="/styles/HomePage.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+        min-height: 100vh;
+      }
+      .dashboard-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.2rem 2rem 1.2rem 1.2rem;
+        background: #fff;
+        box-shadow: 0 2px 12px #a6c1ee33;
+      }
+      .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #38b2ac 60%, #fbc2eb 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-right: 1rem;
+      }
+      .dashboard-search {
+        width: 100%;
+        max-width: 500px;
+        margin: 2rem auto 1.5rem auto;
+        display: flex;
+        justify-content: center;
+      }
+      .dashboard-search input {
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        border-radius: 24px;
+        border: 1.5px solid #a6c1ee;
+        font-size: 1.1rem;
+        outline: none;
+        box-shadow: 0 2px 8px #a6c1ee22;
+        transition: border 0.2s;
+      }
+      .dashboard-banners {
+        width: 100vw;
+        max-width: 100%;
+        display: flex;
+        overflow-x: auto;
+        gap: 1.5rem;
+        padding: 0 2rem 1.5rem 2rem;
+      }
+      .dashboard-banner-img {
+        height: 180px;
+        min-width: 320px;
+        border-radius: 18px;
+        object-fit: cover;
+        box-shadow: 0 4px 16px #805ad555;
+      }
+      .dashboard-categories {
+        display: flex;
+        gap: 1.2rem;
+        justify-content: center;
+        margin: 2rem 0 1.5rem 0;
+        flex-wrap: wrap;
+      }
+      .category-chip {
+        background: linear-gradient(90deg, #38b2ac 0%, #fbc2eb 100%);
+        color: #fff;
+        border-radius: 24px;
+        padding: 0.7rem 1.8rem;
+        font-size: 1rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px #fbc2eb33;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s, color 0.2s;
+      }
+      .category-chip:hover {
+        background: linear-gradient(90deg, #fbc2eb 0%, #38b2ac 100%);
+        color: #2d3748;
+      }
+      .dashboard-products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        padding: 2rem 2rem 3rem 2rem;
+      }
+      .product-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px #805ad555;
+        width: 220px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.2rem 1rem 1.5rem 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .product-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 32px #38b2ac33;
+      }
+      .product-img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+      .product-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #38b2ac;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+      .product-category {
+        font-size: 0.95rem;
+        color: #805ad5;
+        margin-bottom: 0.7rem;
+      }
+      .product-price {
+        font-size: 1.1rem;
+        color: #2d3748;
+        font-weight: 600;
+      }
+      @media (max-width: 900px) {
+        .dashboard-banners {
+          flex-direction: column;
+          align-items: center;
+        }
+        .dashboard-products {
+          gap: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="dashboard-header">
+      <div class="user-avatar" title="User Profile">U</div>
+      <h1 style="font-family: 'Montserrat', cursive; color: #805ad5; font-size: 2rem; margin: 0;">ReWear</h1>
+      <div></div>
+    </header>
+    <div class="dashboard-search">
+      <input type="text" placeholder="Search for products, categories..." />
+    </div>
+    <div class="dashboard-banners">
+      <img src="/images/banner1.jpg" alt="Banner 1" class="dashboard-banner-img" />
+      <img src="/images/banner2.jpg" alt="Banner 2" class="dashboard-banner-img" />
+      <img src="/images/banner3.jpg" alt="Banner 3" class="dashboard-banner-img" />
+    </div>
+    <div class="dashboard-categories">
+      <button class="category-chip">Jeans</button>
+      <button class="category-chip">Western Wear</button>
+      <button class="category-chip">Casual Wear</button>
+      <button class="category-chip">Ethnic Wear</button>
+      <button class="category-chip">T-Shirts</button>
+      <button class="category-chip">Dresses</button>
+      <button class="category-chip">Kids</button>
+    </div>
+    <div class="dashboard-products">
+      <div class="product-card">
+        <img src="/images/product1.jpg" alt="Product 1" class="product-img" />
+        <div class="product-title">Blue Denim Jeans</div>
+        <div class="product-category">Jeans</div>
+        <div class="product-price">₹399</div>
+      </div>
+      <div class="product-card">
+        <img src="/images/product2.jpg" alt="Product 2" class="product-img" />
+        <div class="product-title">Floral Western Dress</div>
+        <div class="product-category">Western Wear</div>
+        <div class="product-price">₹499</div>
+      </div>
+      <div class="product-card">
+        <img src="/images/product3.jpg" alt="Product 3" class="product-img" />
+        <div class="product-title">Casual T-Shirt</div>
+        <div class="product-category">T-Shirts</div>
+        <div class="product-price">₹199</div>
+      </div>
+      <div class="product-card">
+        <img src="/images/product4.jpg" alt="Product 4" class="product-img" />
+        <div class="product-title">Kids Ethnic Set</div>
+        <div class="product-category">Kids</div>
+        <div class="product-price">₹299</div>
+      </div>
+      <div class="product-card">
+        <img src="/images/product5.jpg" alt="Product 5" class="product-img" />
+        <div class="product-title">Classic Kurta</div>
+        <div class="product-category">Ethnic Wear</div>
+        <div class="product-price">₹349</div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "odoohackathon",
+  "version": "1.0.0",
+  "description": "- **Team Member 1:** 23wh1a05h6@bvrithyderabad.edu.in  \r - **Team Member 2:** 23wh1a05h7@bvrithyderabad.edu.in  \r - **Team Member 3:** 23wh1a05d1@bvrithyderabad.edu.in  \r - **Team Member 4:** 23wh1a05h4@bvrithyderabad.edu.in",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SriKarunareddy/odoohackathon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SriKarunareddy/odoohackathon/issues"
+  },
+  "homepage": "https://github.com/SriKarunareddy/odoohackathon#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.2"
+  }
+}

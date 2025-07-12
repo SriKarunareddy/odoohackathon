@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReWear - Community Clothing Exchange</title>
+    <link rel="stylesheet" href="/styles/HomePage.css" />
+  </head>
+  <body>
+    <div class="homepage-container">
+      <div class="carousel-bg">
+        <div class="carousel-slide fade">
+          <img src="https://i.pinimg.com/1200x/b7/13/c1/b713c11bed95273d6005b818f264eb21.jpg" alt="Clothing Exchange 1" />
+        </div>
+        <div class="carousel-slide">
+          <img src="https://i.pinimg.com/originals/1d/d4/09/1dd409b28a8464e2a28042d4d3678789.jpg" alt="Clothing Exchange 2" />
+        </div>
+        <div class="carousel-slide">
+          <img src="https://i.pinimg.com/originals/52/03/61/520361b68989255f1b0b709ddc400b51.jpg" alt="Clothing Exchange 3" />
+        </div>
+        <div class="color-overlay"></div>
+      </div>
+      <div class="homepage-content">
+        <header class="homepage-header">
+          <div class="logo-title">
+            <img src="/styles/logo.svg" alt="ReWear Logo" class="logo-img" />
+            <h1 class="homepage-title">ReWear - Community Clothing Exchange</h1>
+          </div>
+          <button class="login-button" id="openLogin">Login</button>
+      <!-- Login Modal -->
+      <div id="loginModal" class="modal-bg" style="display:none;">
+        <div class="modal-content" style="display: flex; flex-direction: row; gap: 0; align-items: stretch; justify-content: center; min-width: 600px; max-width: 900px; width: 80vw;">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 2px solid #f3e8ff; padding: 2.5rem 2rem;">
+            <img src="/styles/logo.svg" alt="ReWear Logo" class="modal-logo" />
+            <h2 class="modal-title">User Login</h2>
+            <form class="login-form" style="width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 1rem;">
+              <form class="login-form" action="/login/user" method="POST" style="width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 1rem;">
+                <input type="text" name="username" placeholder="Username" class="modal-input" required />
+                <input type="password" name="password" placeholder="Password" class="modal-input" required />
+                <button type="submit" class="modal-submit">Login</button>
+              </form>
+            </form>
+            <div class="modal-signup" style="margin-top: 1.2rem;">
+              <span>New user?</span> <a href="/signup" class="signup-link">Create account</a>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f7fafc; border-radius: 0 18px 18px 0; padding: 2.5rem 2rem; min-width: 200px;">
+            <img src="/styles/logo.svg" alt="ReWear Logo" class="modal-logo" />
+            <h2 class="modal-title" style="color: #805ad5;">Admin Login</h2>
+            <form class="admin-login-form" style="width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 1rem;">
+              <input type="text" placeholder="Admin Username" class="modal-input" required />
+              <input type="password" placeholder="Password" class="modal-input" required />
+              <button type="submit" class="modal-submit">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+        </header>
+        <main class="homepage-main">
+          <div class="centered-description">
+            <p class="homepage-description">
+              ReWear is a <span class="highlight">Community Clothing Exchange Platform</span> that aims to <span class="highlight2">reduce textile waste</span> by creating a <span class="highlight3">circular clothing ecosystem</span>.<br/><br/>It empowers individuals to <span class="highlight4">donate</span>, <span class="highlight5">exchange</span>, or <span class="highlight6">request clothes</span> within their local communities, making fashion more <span class="highlight7">sustainable</span> and <span class="highlight8">accessible</span>.
+            </p>
+          </div>
+        </main>
+      </div>
+      <script>
+        // Carousel
+        let slideIndex = 0;
+        showSlides();
+        function showSlides() {
+          const slides = document.getElementsByClassName("carousel-slide");
+          for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("fade");
+          }
+          slideIndex++;
+          if (slideIndex > slides.length) {slideIndex = 1;}
+          slides[slideIndex-1].classList.add("fade");
+          setTimeout(showSlides, 3000);
+        }
+
+        // Login Modal
+        const openLogin = document.getElementById('openLogin');
+        const loginModal = document.getElementById('loginModal');
+        openLogin.onclick = function() {
+          loginModal.style.display = 'flex';
+        };
+        window.onclick = function(event) {
+          if (event.target === loginModal) {
+            loginModal.style.display = 'none';
+          }
+        };
+        document.querySelector('.login-form').onsubmit = function(e) {
+          // No JS needed for form submit, handled by backend
+          // Remove this handler if using backend authentication
+          return true;
+        };
+      </script>
+    </div>
+  </body>
+</html>
