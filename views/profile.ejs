@@ -33,20 +33,33 @@
     </style>
   </head>
   <body>
-    <div class="profile-header">
-      <div class="profile-avatar"><%= username.charAt(0).toUpperCase() %></div>
-      <div class="profile-details">
-        <h2><%= username %>'s Profile</h2>
-        <p>Email: (add email here)</p>
-        <p>Location: (add location here)</p>
-      </div>
-    </div>
-    <div style="padding:2rem;">
-      <form action="/login/user" method="POST" style="display:inline;">
-        <input type="hidden" name="username" value="<%= username %>" />
-        <input type="hidden" name="password" value="" />
-        <button type="submit" style="background:none; border:none; color:#805ad5; text-decoration:underline; cursor:pointer; font-size:1rem;">Back to Dashboard</button>
-      </form>
-    </div>
+    <main style="padding:2rem; max-width:700px; margin:auto;">
+      <a href="/dashboard" style="color:#805ad5; text-decoration:underline; font-size:1rem; display:inline-block; margin-bottom:2rem;">&larr; Back to Dashboard</a>
+      <section style="margin-bottom:2rem;">
+        <h2>Welcome, <%= username %>!</h2>
+        <p><strong>Email:</strong> <%= email %></p>
+        <p><strong>Points:</strong> <%= points %></p>
+      </section>
+      <section style="margin-bottom:2rem;">
+        <h3>My Listings</h3>
+        <ul>
+          <% if (typeof listings !== 'undefined' && listings.length === 0) { %>
+            <li>No listings yet.</li>
+          <% } else if (typeof listings !== 'undefined') { listings.forEach(function(listing) { %>
+            <li><%= listing %></li>
+          <% }); } %>
+        </ul>
+      </section>
+      <section style="margin-bottom:2rem;">
+        <h3>Purchased Dresses</h3>
+        <ul>
+          <% if (typeof purchases !== 'undefined' && purchases.length === 0) { %>
+            <li>No purchases yet.</li>
+          <% } else if (typeof purchases !== 'undefined') { purchases.forEach(function(purchase) { %>
+            <li><%= purchase %></li>
+          <% }); } %>
+        </ul>
+      </section>
+    </main>
   </body>
 </html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell Clothes - ReWear</title>
+    <link rel="stylesheet" href="/styles/HomePage.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+        min-height: 100vh;
+      }
+      .sell-form {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px #805ad555;
+        max-width: 500px;
+        margin: 3rem auto;
+        padding: 2rem;
+      }
+      .sell-form h2 {
+        color: #805ad5;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+      .sell-form label {
+        font-weight: 600;
+        color: #805ad5;
+        margin-top: 1rem;
+        display: block;
+      }
+      .sell-form input, .sell-form textarea, .sell-form select {
+        width: 100%;
+        padding: 0.7rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1.5px solid #a6c1ee;
+        font-size: 1rem;
+      }
+      .sell-form button {
+        background: #38b2ac;
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #38b2ac33;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form class="sell-form" action="/sell" method="POST" enctype="multipart/form-data">
+      <h2>Sell Your Clothing Item</h2>
+      <label for="photo">Upload Photo</label>
+      <input type="file" id="photo" name="photo" accept="image/*" capture="environment" required />
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3" placeholder="Describe your item..." required></textarea>
+      <label for="size">Size</label>
+      <input type="text" id="size" name="size" placeholder="e.g. M, L, XL" required />
+      <label for="texture">Texture</label>
+      <input type="text" id="texture" name="texture" placeholder="e.g. Cotton, Silk" required />
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="">Select Category</option>
+        <option value="Jeans">Jeans</option>
+        <option value="Western Wear">Western Wear</option>
+        <option value="Casual Wear">Casual Wear</option>
+        <option value="Ethnic Wear">Ethnic Wear</option>
+        <option value="T-Shirts">T-Shirts</option>
+        <option value="Dresses">Dresses</option>
+        <option value="Kids">Kids</option>
+      </select>
+      <label for="colour">Colour</label>
+      <input type="text" id="colour" name="colour" placeholder="e.g. Blue, Red" required />
+      <button type="submit">Submit Listing</button>
+    </form>
+  </body>
+</html>

@@ -1,3 +1,6 @@
+// ...existing code...
+// Route definitions (move below app initialization)
+// (Moved below app initialization)
 
 const express = require('express');
 const path = require('path');
@@ -8,6 +11,37 @@ const app = express();
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// --- SESSION MANAGEMENT SETUP ---
+const session = require('express-session');
+app.use(session({
+  secret: 'rewear_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+// ...existing code...
+
+// Route definitions (now correctly placed below app initialization)
+app.get('/swap-sell', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  res.render('swap-sell');
+});
+app.get('/sell', (req, res) => {
+  if (!req.session.user) {
+    return res.render('sell', { error: 'You must be logged in to sell an item.' });
+  }
+  res.render('sell');
+});
+app.get('/swap', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  res.send('<h2>Swap Clothes page coming soon!</h2>');
+});
 
 // Serve static files (CSS)
 app.use('/styles', express.static(path.join(__dirname, 'public/styles')));
@@ -44,6 +78,41 @@ db.connect((err) => {
   )`, (err) => {
     if (err) throw err;
   });
+    // Insert two admin records if not already present
+    db.query(`INSERT IGNORE INTO admins (username, email, password) VALUES ('admin1', 'admin1@gmail.com', '1234'), ('admin2', 'admin2@gmail.com', '1234')`, (err) => {
+      if (err) throw err;
+    });
+});
+app.post('/login/admin', (req, res) => {
+  const { username, password } = req.body;
+  db.query(
+    'SELECT * FROM admins WHERE username = ? AND password = ?',
+    [username, password],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Server error');
+      }
+      if (results.length > 0) {
+        // Admin exists, login success
+        req.session.admin = {
+          username: results[0].username,
+          email: results[0].email
+        };
+        res.redirect('/admin-dashboard');
+      } else {
+        // Admin does not exist, show error
+        res.send('<script>alert("Admin not found or wrong password."); window.location.href="/";</script>');
+      }
+    }
+  );
+});
+app.get('/admin-dashboard', (req, res) => {
+  if (!req.session.admin) {
+    return res.redirect('/');
+  }
+  const { username, email } = req.session.admin;
+  res.render('admin-dashboard', { username, email });
 });
 
 // Home route
@@ -57,8 +126,13 @@ app.get('/signup', (req, res) => {
 
 // User dashboard route
 app.get('/dashboard', (req, res) => {
-  // In a real app, check user session/auth here
-  res.render('dashboard');
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  const { username, email, points } = req.session.user;
+  const listings = req.session.listings || [];
+  const purchases = req.session.purchases || [];
+  res.render('dashboard', { username, email, points, listings, purchases });
 });
 
 // User signup POST
@@ -108,13 +182,15 @@ app.post('/login/user', (req, res) => {
       if (results.length > 0) {
         // User exists, login success
         const user = results[0];
-        res.render('dashboard', {
+        // Store user info in session
+        req.session.user = {
           username: user.username,
           email: user.email,
-          points: 50,
-          listings: [], // You can fetch actual listings from DB
-          purchases: [] // You can fetch actual purchases from DB
-        });
+          points: 50
+        };
+        req.session.listings = [];
+        req.session.purchases = [];
+        res.redirect('/dashboard');
       } else {
         // User does not exist, show error
         res.send('<script>alert("User not found or wrong password. Please sign up first."); window.location.href="/signup";</script>');
@@ -123,8 +199,11 @@ app.post('/login/user', (req, res) => {
   );
 // User profile route
 app.get('/profile', (req, res) => {
-  // For demo, just show username. In real app, fetch user details from DB.
-  res.render('profile', { username: 'User' });
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  const { username, email, points } = req.session.user;
+  res.render('profile', { username, email, points });
 });
 });
 const PORT = process.env.PORT || 3000;

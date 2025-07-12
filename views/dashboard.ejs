@@ -155,36 +155,12 @@
       <h1 style="font-family: 'Montserrat', cursive; color: #805ad5; font-size: 2rem; margin: 0;">ReWear</h1>
       <div></div>
     </header>
-    <main style="padding:2rem; max-width:700px; margin:auto;">
-      <section style="margin-bottom:2rem;">
-        <h2>Welcome, <%= username %>!</h2>
-        <p><strong>Email:</strong> <%= email %></p>
-        <p><strong>Points:</strong> <%= points %></p>
-      </section>
-      <section style="margin-bottom:2rem;">
-        <h3>My Listings</h3>
-        <ul>
-          <% if (listings.length === 0) { %>
-            <li>No listings yet.</li>
-          <% } else { listings.forEach(function(listing) { %>
-            <li><%= listing %></li>
-          <% }); } %>
-        </ul>
-      </section>
-      <section style="margin-bottom:2rem;">
-        <h3>Purchased Dresses</h3>
-        <ul>
-          <% if (purchases.length === 0) { %>
-            <li>No purchases yet.</li>
-          <% } else { purchases.forEach(function(purchase) { %>
-            <li><%= purchase %></li>
-          <% }); } %>
-        </ul>
-      </section>
-    </main>
-    </header>
+    <!-- Removed user info, listings, and purchases from dashboard main body as requested -->
     <div class="dashboard-search">
       <input type="text" placeholder="Search for products, categories..." />
+    </div>
+    <div style="display:flex; justify-content:center; margin-bottom:2rem;">
+      <button onclick="window.location.href='/sell'" style="background:#805ad5; color:#fff; border:none; border-radius:24px; padding:0.8rem 2rem; font-size:1.1rem; font-weight:600; cursor:pointer; box-shadow:0 2px 8px #805ad533;">Add a Dress/Cloth to Sell</button>
     </div>
     <div class="dashboard-banners">
       <img src="/images/banner1.jpg" alt="Banner 1" class="dashboard-banner-img" />

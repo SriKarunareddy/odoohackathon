@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swap or Sell Clothes - ReWear</title>
+    <link rel="stylesheet" href="/styles/HomePage.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+        min-height: 100vh;
+      }
+      .swap-sell-container {
+        max-width: 500px;
+        margin: 3rem auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px #805ad555;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .swap-sell-container h2 {
+        color: #805ad5;
+        margin-bottom: 2rem;
+      }
+      .swap-sell-container button {
+        background: #38b2ac;
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #38b2ac33;
+        margin-bottom: 1.5rem;
+      }
+      .swap-sell-container button:last-child {
+        background: #805ad5;
+        box-shadow: 0 2px 8px #805ad533;
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="swap-sell-container">
+      <h2>What would you like to do?</h2>
+      <button onclick="window.location.href='/swap'">Swap Clothes</button>
+      <button onclick="window.location.href='/sell'">Sell Clothes</button>
+    </div>
+  </body>
+</html>
