@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - ReWear</title>
+    <link rel="stylesheet" href="/styles/HomePage.css" />
+    <style>
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 2rem;
+        background: #fff;
+        box-shadow: 0 2px 12px #a6c1ee33;
+      }
+      .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #805ad5;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+      .profile-details {
+        font-size: 1.2rem;
+        color: #805ad5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-header">
+      <div class="profile-avatar"><%= username.charAt(0).toUpperCase() %></div>
+      <div class="profile-details">
+        <h2><%= username %>'s Profile</h2>
+        <p>Email: (add email here)</p>
+        <p>Location: (add location here)</p>
+      </div>
+    </div>
+    <div style="padding:2rem;">
+      <form action="/login/user" method="POST" style="display:inline;">
+        <input type="hidden" name="username" value="<%= username %>" />
+        <input type="hidden" name="password" value="" />
+        <button type="submit" style="background:none; border:none; color:#805ad5; text-decoration:underline; cursor:pointer; font-size:1rem;">Back to Dashboard</button>
+      </form>
+    </div>
+  </body>
+</html>

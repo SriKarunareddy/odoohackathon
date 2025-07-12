@@ -18,35 +18,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // MySQL connection
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',        // use your MySQL username
-  password: 'SMP512',        // use your MySQL password
+  user: 'root',
+  password: 'Daddy#123',
+  database: 'rewear',
+  port: 3306
 });
 
-// Create database and tables if not exist
+// Create tables if not exist
 db.connect((err) => {
   if (err) throw err;
-  db.query('CREATE DATABASE IF NOT EXISTS rewear', (err) => {
+  db.query(`CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    location VARCHAR(100) NOT NULL
+  )`, (err) => {
     if (err) throw err;
-    db.query('USE rewear', (err) => {
-      if (err) throw err;
-      db.query(`CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(100) NOT NULL,
-        email VARCHAR(100) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        location VARCHAR(100) NOT NULL
-      )`, (err) => {
-        if (err) throw err;
-      });
-      db.query(`CREATE TABLE IF NOT EXISTS admins (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(100) NOT NULL,
-        email VARCHAR(100) NOT NULL,
-        password VARCHAR(255) NOT NULL
-      )`, (err) => {
-        if (err) throw err;
-      });
-    });
+  });
+  db.query(`CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+  )`, (err) => {
+    if (err) throw err;
   });
 });
 
@@ -110,16 +106,29 @@ app.post('/login/user', (req, res) => {
         return res.status(500).send('Server error');
       }
       if (results.length > 0) {
-        // Login success, redirect to dashboard
-        res.redirect('/dashboard');
+        // User exists, login success
+        const user = results[0];
+        res.render('dashboard', {
+          username: user.username,
+          email: user.email,
+          points: 50,
+          listings: [], // You can fetch actual listings from DB
+          purchases: [] // You can fetch actual purchases from DB
+        });
       } else {
-        // Login failed, redirect to home with error (could be improved)
-        res.redirect('/?login=fail');
+        // User does not exist, show error
+        res.send('<script>alert("User not found or wrong password. Please sign up first."); window.location.href="/signup";</script>');
       }
     }
   );
+// User profile route
+app.get('/profile', (req, res) => {
+  // For demo, just show username. In real app, fetch user details from DB.
+  res.render('profile', { username: 'User' });
+});
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

@@ -147,9 +147,41 @@
   </head>
   <body>
     <header class="dashboard-header">
-      <div class="user-avatar" title="User Profile">U</div>
+      <button class="user-avatar" title="Open Profile" style="border:none; background:none; padding:0; cursor:pointer;" onclick="window.location.href='/profile'">
+        <div style="width:48px; height:48px; border-radius:50%; background:#805ad5; color:#fff; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:bold;">
+          <%= username.charAt(0).toUpperCase() %>
+        </div>
+      </button>
       <h1 style="font-family: 'Montserrat', cursive; color: #805ad5; font-size: 2rem; margin: 0;">ReWear</h1>
       <div></div>
+    </header>
+    <main style="padding:2rem; max-width:700px; margin:auto;">
+      <section style="margin-bottom:2rem;">
+        <h2>Welcome, <%= username %>!</h2>
+        <p><strong>Email:</strong> <%= email %></p>
+        <p><strong>Points:</strong> <%= points %></p>
+      </section>
+      <section style="margin-bottom:2rem;">
+        <h3>My Listings</h3>
+        <ul>
+          <% if (listings.length === 0) { %>
+            <li>No listings yet.</li>
+          <% } else { listings.forEach(function(listing) { %>
+            <li><%= listing %></li>
+          <% }); } %>
+        </ul>
+      </section>
+      <section style="margin-bottom:2rem;">
+        <h3>Purchased Dresses</h3>
+        <ul>
+          <% if (purchases.length === 0) { %>
+            <li>No purchases yet.</li>
+          <% } else { purchases.forEach(function(purchase) { %>
+            <li><%= purchase %></li>
+          <% }); } %>
+        </ul>
+      </section>
+    </main>
     </header>
     <div class="dashboard-search">
       <input type="text" placeholder="Search for products, categories..." />
