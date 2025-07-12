@@ -1,65 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile - ReWear</title>
-    <link rel="stylesheet" href="/styles/HomePage.css" />
-    <style>
-      .profile-header {
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-        padding: 2rem;
-        background: #fff;
-        box-shadow: 0 2px 12px #a6c1ee33;
-      }
-      .profile-avatar {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: #805ad5;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        font-weight: bold;
-      }
-      .profile-details {
-        font-size: 1.2rem;
-        color: #805ad5;
-      }
-    </style>
-  </head>
-  <body>
-    <main style="padding:2rem; max-width:700px; margin:auto;">
-      <a href="/dashboard" style="color:#805ad5; text-decoration:underline; font-size:1rem; display:inline-block; margin-bottom:2rem;">&larr; Back to Dashboard</a>
-      <section style="margin-bottom:2rem;">
-        <h2>Welcome, <%= username %>!</h2>
-        <p><strong>Email:</strong> <%= email %></p>
-        <p><strong>Points:</strong> <%= points %></p>
-      </section>
-      <section style="margin-bottom:2rem;">
-        <h3>My Listings</h3>
-        <ul>
-          <% if (typeof listings !== 'undefined' && listings.length === 0) { %>
-            <li>No listings yet.</li>
-          <% } else if (typeof listings !== 'undefined') { listings.forEach(function(listing) { %>
-            <li><%= listing %></li>
-          <% }); } %>
-        </ul>
-      </section>
-      <section style="margin-bottom:2rem;">
-        <h3>Purchased Dresses</h3>
-        <ul>
-          <% if (typeof purchases !== 'undefined' && purchases.length === 0) { %>
-            <li>No purchases yet.</li>
-          <% } else if (typeof purchases !== 'undefined') { purchases.forEach(function(purchase) { %>
-            <li><%= purchase %></li>
-          <% }); } %>
-        </ul>
-      </section>
-    </main>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>ReWear - User Profile</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #c491f4 0%, #e7d6fb 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #5c3a8c;
+      margin: 0;
+      padding: 0;
+    }
+    .profile-container {
+      max-width: 400px;
+      margin: 60px auto 30px auto;
+      background: #f8f4ff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(92, 58, 140, 0.10);
+      padding: 32px;
+      text-align: center;
+    }
+    .profile-header {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+      color: #a084ca;
+      text-shadow: 1px 1px 8px #e7d6fb;
+    }
+    .profile-details {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .profile-details span {
+      display: block;
+      margin: 8px 0;
+      font-weight: 500;
+      color: #7c5da8;
+    }
+    .points {
+      font-size: 1.5rem;
+      color: #a084ca;
+      font-weight: bold;
+      margin-top: 16px;
+      text-shadow: 1px 1px 8px #e7d6fb;
+    }
+    .btn {
+      background: #e7d6fb;
+      color: #5c3a8c;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #a084ca;
+      color: #fff;
+    }
+    .section {
+      max-width: 500px;
+      margin: 0 auto 24px auto;
+      background: #f3e7fe;
+      border-radius: 12px;
+      padding: 20px;
+      color: #5c3a8c;
+      box-shadow: 0 2px 8px 0 rgba(92, 58, 140, 0.08);
+    }
+    h3 {
+      color: #a084ca;
+      margin-bottom: 12px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      background: #e7d6fb;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #5c3a8c;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-header">👤 Your Profile</div>
+    <div class="profile-details">
+      <span><strong>Username:</strong> <%= username %></span>
+      <span><strong>Email:</strong> <%= email %></span>
+    </div>
+    <div class="points">🌟 Points: <%= points %></div>
+    <a href="/dashboard" class="btn">Back to Dashboard</a>
+  </div>
+  <div class="section">
+    <h3>My Listings</h3>
+    <ul>
+      <% if (typeof listings !== 'undefined' && listings.length === 0) { %>
+        <li>No listings yet.</li>
+      <% } else if (typeof listings !== 'undefined') { listings.forEach(function(listing) { %>
+        <li><%= listing %></li>
+      <% }); } %>
+    </ul>
+  </div>
+  <div class="section">
+    <h3>Purchased Dresses</h3>
+    <ul>
+      <% if (typeof purchases !== 'undefined' && purchases.length === 0) { %>
+        <li>No purchases yet.</li>
+      <% } else if (typeof purchases !== 'undefined') { purchases.forEach(function(purchase) { %>
+        <li><%= purchase %></li>
+      <% }); } %>
+    </ul>
+  </div>
+</body>
 </html>

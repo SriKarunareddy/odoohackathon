@@ -7,6 +7,9 @@ const path = require('path');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const app = express();
+// Multer setup for file uploads
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, 'public/uploads/') });
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -45,6 +48,9 @@ app.get('/swap', (req, res) => {
 
 // Serve static files (CSS)
 app.use('/styles', express.static(path.join(__dirname, 'public/styles')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+// Serve static files from the public/images directory
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -75,6 +81,18 @@ db.connect((err) => {
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL
+  )`, (err) => {
+    if (err) throw err;
+  });
+  db.query(`CREATE TABLE IF NOT EXISTS clothes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clothesname VARCHAR(100) NOT NULL,
+    bought_or_sold ENUM('bought', 'sold', 'swapped') NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    accepted_by_admin TINYINT(1) DEFAULT 0,
+    is_live TINYINT(1) DEFAULT 1,
+    points_gone INT DEFAULT 0,
+    points_added INT DEFAULT 0
   )`, (err) => {
     if (err) throw err;
   });
@@ -112,7 +130,13 @@ app.get('/admin-dashboard', (req, res) => {
     return res.redirect('/');
   }
   const { username, email } = req.session.admin;
-  res.render('admin-dashboard', { username, email });
+  db.query('SELECT * FROM clothes WHERE accepted_by_admin = 0', (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error loading listings');
+    }
+    res.render('admin-dashboard', { username, email, listings: results });
+  });
 });
 
 // Home route
@@ -130,9 +154,13 @@ app.get('/dashboard', (req, res) => {
     return res.redirect('/');
   }
   const { username, email, points } = req.session.user;
-  const listings = req.session.listings || [];
-  const purchases = req.session.purchases || [];
-  res.render('dashboard', { username, email, points, listings, purchases });
+  db.query('SELECT * FROM clothes WHERE accepted_by_admin = 1', (err, products) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error loading products');
+    }
+    res.render('dashboard', { username, email, points, products });
+  });
 });
 
 // User signup POST
@@ -197,17 +225,95 @@ app.post('/login/user', (req, res) => {
       }
     }
   );
-// User profile route
+});
+// Remove duplicate route definition
+app.post('/sell', upload.single('photo'), (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  const { description, size, texture, category, colour, points } = req.body;
+  const clothesname = description;
+  const username = req.session.user.username;
+  // Save all product details, including photo filename
+  const photo = req.file ? req.file.filename : null;
+  db.query(
+    'INSERT INTO clothes (clothesname, bought_or_sold, username, accepted_by_admin, is_live, points_gone, points_added, size, texture, category, colour, points, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [clothesname, 'sold', username, 0, 1, 0, 0, size, texture, category, colour, points, photo],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error saving listing');
+      }
+      res.redirect('/dashboard?listing=success');
+    }
+  );
+});
+
+// Ensure clothes table has all columns
+
+// Add columns individually (ignore error if column exists)
+const addColumn = (colName) => {
+  db.query(`ALTER TABLE clothes ADD COLUMN ${colName} VARCHAR(50)`, (err) => {
+    if (err && err.code !== 'ER_DUP_FIELDNAME') {
+      console.error(`Could not add column ${colName}:`, err);
+    }
+  });
+};
+addColumn('size');
+addColumn('texture');
+addColumn('category');
+addColumn('colour');
+
+// Ensure server closes properly
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+
+// --- ADMIN LISTING APPROVAL/REJECTION ROUTES ---
+app.post('/admin/listing/:id/accept', (req, res) => {
+  if (!req.session.admin) {
+    return res.status(403).send('Unauthorized');
+  }
+  const listingId = req.params.id;
+  db.query('UPDATE clothes SET accepted_by_admin = 1 WHERE id = ?', [listingId], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error approving listing');
+    }
+    res.redirect('/admin-dashboard');
+  });
+});
+
+app.post('/admin/listing/:id/reject', (req, res) => {
+  if (!req.session.admin) {
+    return res.status(403).send('Unauthorized');
+  }
+  const listingId = req.params.id;
+  // Option 1: Remove listing from DB
+  db.query('DELETE FROM clothes WHERE id = ?', [listingId], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error rejecting listing');
+    }
+    res.redirect('/admin-dashboard');
+  });
+  // Option 2: Mark as rejected (uncomment if you want to keep record)
+  // db.query('UPDATE clothes SET accepted_by_admin = -1 WHERE id = ?', [listingId], (err) => {
+  //   if (err) {
+  //     console.error(err);
+  //     return res.status(500).send('Error rejecting listing');
+  //   }
+  //   res.redirect('/admin-dashboard');
+  // });
+});
+
 app.get('/profile', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/');
   }
   const { username, email, points } = req.session.user;
-  res.render('profile', { username, email, points });
-});
-});
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  const listings = req.session.listings || [];
+  const purchases = req.session.purchases || [];
+  res.render('profile', { username, email, points, listings, purchases });
 });
 

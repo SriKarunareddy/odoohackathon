@@ -50,5 +50,54 @@
         <p>This is the admin dashboard. You can add admin features here.</p>
       </section>
     </main>
+    <main style="padding:2rem; max-width:700px; margin:auto;">
+      <section style="margin-bottom:2rem;">
+        <h2>Welcome, <%= username %>!</h2>
+        <p><strong>Email:</strong> <%= email %></p>
+        <p>This is the admin dashboard. You can add admin features here.</p>
+      </section>
+      <section>
+        <h2>Pending Listings</h2>
+        <% if (listings && listings.length > 0) { %>
+          <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
+            <thead>
+              <tr style="background:#fbc2eb; color:#805ad5;">
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Clothes Name</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">User</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Type</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Size</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Texture</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Category</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Colour</th>
+                <th style="padding:0.5rem; border:1px solid #a6c1ee;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% listings.forEach(function(listing) { %>
+                <tr>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.clothesname %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.username %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.bought_or_sold %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.size %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.texture %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.category %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;"> <%= listing.colour %> </td>
+                  <td style="padding:0.5rem; border:1px solid #a6c1ee;">
+                    <form action="/admin/listing/<%= listing.id %>/accept" method="POST" style="display:inline;">
+                      <button type="submit" style="background:#38b2ac; color:#fff; border:none; border-radius:12px; padding:0.4rem 1rem; font-weight:600; cursor:pointer;">Accept</button>
+                    </form>
+                    <form action="/admin/listing/<%= listing.id %>/reject" method="POST" style="display:inline; margin-left:0.5rem;">
+                      <button type="submit" style="background:#e53e3e; color:#fff; border:none; border-radius:12px; padding:0.4rem 1rem; font-weight:600; cursor:pointer;">Reject</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p>No pending listings.</p>
+        <% } %>
+      </section>
+    </main>
   </body>
 </html>
