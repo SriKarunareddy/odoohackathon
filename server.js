@@ -154,7 +154,7 @@ app.get('/dashboard', (req, res) => {
     return res.redirect('/');
   }
   const { username, email, points } = req.session.user;
-  db.query('SELECT * FROM clothes WHERE accepted_by_admin = 1', (err, products) => {
+  db.query('SELECT * FROM clothes WHERE accepted_by_admin = 1 AND is_live = 1', (err, products) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Error loading products');
@@ -307,13 +307,87 @@ app.post('/admin/listing/:id/reject', (req, res) => {
   // });
 });
 
+// User profile route
 app.get('/profile', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/');
   }
   const { username, email, points } = req.session.user;
-  const listings = req.session.listings || [];
-  const purchases = req.session.purchases || [];
-  res.render('profile', { username, email, points, listings, purchases });
+  // Fetch sold and bought history from DB
+  db.query('SELECT * FROM clothes WHERE username = ? AND bought_or_sold = "sold"', [username], (err, soldListings) => {
+    if (err) {
+      return res.status(500).send('Error loading sold listings');
+    }
+    db.query('SELECT * FROM clothes WHERE buyer_username = ? AND bought_or_sold = "bought"', [username], (err, boughtListings) => {
+      if (err) {
+        return res.status(500).send('Error loading bought listings');
+      }
+      res.render('profile', { username, email, points, listings: soldListings, purchases: boughtListings });
+    });
+  });
+});
+
+// --- BUY PRODUCT ROUTE ---
+app.post('/buy/:id', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  const buyerUsername = req.session.user.username;
+  const productId = req.params.id;
+  // Get product info
+  db.query('SELECT * FROM clothes WHERE id = ?', [productId], (err, results) => {
+    if (err || results.length === 0) {
+      return res.status(404).send('Product not found');
+    }
+    const product = results[0];
+    const productPoints = parseInt(product.points);
+    const sellerUsername = product.username;
+    // Get buyer info
+    db.query('SELECT * FROM users WHERE username = ?', [buyerUsername], (err, buyerResults) => {
+      if (err || buyerResults.length === 0) {
+        return res.status(404).send('Buyer not found');
+      }
+      const buyer = buyerResults[0];
+      let buyerPoints = parseInt(buyer.points || 50);
+      if (buyerPoints < productPoints) {
+        return res.send('<script>alert("Not enough points to buy this product."); window.location.href="/dashboard";</script>');
+      }
+      // Get seller info
+      db.query('SELECT * FROM users WHERE username = ?', [sellerUsername], (err, sellerResults) => {
+        if (err || sellerResults.length === 0) {
+          return res.status(404).send('Seller not found');
+        }
+        const seller = sellerResults[0];
+        let sellerPoints = parseInt(seller.points || 50);
+        // Update points
+        buyerPoints -= productPoints;
+        sellerPoints += productPoints;
+        // Update DB for both users
+        db.query('UPDATE users SET points = ? WHERE username = ?', [buyerPoints, buyerUsername], (err) => {
+          if (err) {
+            return res.status(500).send('Error updating buyer points');
+          }
+          db.query('UPDATE users SET points = ? WHERE username = ?', [sellerPoints, sellerUsername], (err) => {
+            if (err) {
+              return res.status(500).send('Error updating seller points');
+            }
+            // Mark product as bought and record buyer
+            db.query('UPDATE clothes SET bought_or_sold = "bought", is_live = 0, buyer_username = ? WHERE id = ?', [buyerUsername, productId], (err) => {
+              if (err) {
+                return res.status(500).send('Error updating product status');
+              }
+              // Update session points for buyer
+              req.session.user.points = buyerPoints;
+              // Add to purchases for buyer
+              req.session.purchases = req.session.purchases || [];
+              req.session.purchases.push(product);
+              // Redirect to dashboard with success
+              return res.redirect('/dashboard');
+            });
+          });
+        });
+      });
+    });
+  });
 });
 
